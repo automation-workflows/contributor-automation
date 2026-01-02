@@ -31,6 +31,10 @@ on:
       DISCORD_APPRENTICE_ROLE_ID:
         required: true
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   # Parse and validate the comment format, extract Discord ID and wallet
   validate:
