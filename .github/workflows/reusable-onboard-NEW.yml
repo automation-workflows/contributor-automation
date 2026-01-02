@@ -88,6 +88,13 @@ jobs:
           echo "✓ Contributor already onboarded. Skipping."
           exit 0
       
+      # Configure Git identity for Gist commits
+      - name: Configure Git
+        if: steps.check_existing.outputs.exists == 'false'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+      
       # Create new TOML entry in Gist with contributor info and first PR
       - name: Create TOML entry in Gist
         if: steps.check_existing.outputs.exists == 'false'

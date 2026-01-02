@@ -89,6 +89,13 @@ jobs:
           echo "Current role: ${{ steps.check_eligibility.outputs.current_role }}"
           echo "PR count: ${{ steps.check_eligibility.outputs.pr_count }}"
       
+      # Configure Git identity for Gist commits
+      - name: Configure Git
+        if: steps.check_eligibility.outputs.eligible == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+      
       # Update contributor's role from Apprentice to Sentinel in Gist
       - name: Update role in TOML
         if: steps.check_eligibility.outputs.eligible == 'true'

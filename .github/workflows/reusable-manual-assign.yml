@@ -64,6 +64,13 @@ jobs:
           EXISTS=$(jq -r '.exists' ../check_result.json)
           echo "exists=$EXISTS" >> $GITHUB_OUTPUT
       
+      # Configure Git identity for Gist commits
+      - name: Configure Git
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+      
       # Track manual assignment in contributor's TOML file
       - name: Add manual assignment to TOML
         if: steps.check.outputs.exists == 'true'

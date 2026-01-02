@@ -74,6 +74,13 @@ jobs:
           echo "Contributor not yet onboarded. Skipping registry update."
           echo "This will be handled by the onboard workflow."
       
+      # Configure Git identity for Gist commits
+      - name: Configure Git
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+      
       # Check if PR meets quality thresholds (min lines, excluded labels)
       - name: Validate PR quality
         if: steps.check.outputs.exists == 'true'
