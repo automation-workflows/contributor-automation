@@ -46,6 +46,8 @@ jobs:
       - name: Validate and extract info
         id: extract
         uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: ${{ inputs.comment_body }}
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -84,7 +86,8 @@ jobs:
             }
             
             // Extract Discord ID and wallet using regex
-            const body = `${{ inputs.comment_body }}`;
+            // Use JSON.parse to safely handle the comment body with special characters
+            const body = process.env.COMMENT_BODY;
             
             const discordMatch = body.match(/discord:\s*"?(\d{17,20})"?/i);
             const walletMatch = body.match(/wallet:\s*"?(0x[a-fA-F0-9]{40})"?/i);
