@@ -33,7 +33,7 @@ on:
 
 permissions:
   issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   # Parse and validate the comment format, extract Discord ID and wallet
