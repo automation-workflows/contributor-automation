@@ -30,8 +30,14 @@ on:
         required: true
 
 jobs:
-  process-response:
+  validate:
     runs-on: ubuntu-latest
+    outputs:
+      validated: ${{ steps.extract.outputs.validated }}
+      discord_id: ${{ steps.extract.outputs.discord_id }}
+      wallet: ${{ steps.extract.outputs.wallet }}
+      pr_author: ${{ steps.extract.outputs.pr_author }}
+      lines_changed: ${{ steps.extract.outputs.lines_changed }}
     
     steps:
       - name: Validate and extract info
@@ -104,15 +110,21 @@ jobs:
             core.setOutput("pr_author", pr.user.login);
             core.setOutput("lines_changed", pr.additions + pr.deletions);
             core.setOutput("validated", "true");
-      
-      - name: Complete onboarding
-        if: steps.extract.outputs.validated == 'true'
-        uses: automation-workflows/contributor-automation/.github/workflows/reusable-onboard-NEW.yml@main
-        with:
-          pr_number: ${{ inputs.issue_number }}
-          repo_name: ${{ inputs.repo_name }}
-          pr_author: ${{ steps.extract.outputs.pr_author }}
-          discord_id: ${{ steps.extract.outputs.discord_id }}
-          wallet: ${{ steps.extract.outputs.wallet }}
-          lines_changed: ${{ steps.extract.outputs.lines_changed }}
-        secrets: inherit
+  
+  complete-onboarding:
+    # you cannot call a reusable workflow from within a step. It must be a job.
+    needs: validate
+    if: needs.validate.outputs.validated == 'true'
+    uses: automation-workflows/contributor-automation/.github/workflows/reusable-onboard-NEW.yml@main
+    with:
+      pr_number: ${{ inputs.issue_number }}
+      repo_name: ${{ inputs.repo_name }}
+      pr_author: ${{ needs.validate.outputs.pr_author }}
+      discord_id: ${{ needs.validate.outputs.discord_id }}
+      wallet: ${{ needs.validate.outputs.wallet }}
+      lines_changed: ${{ fromJson(needs.validate.outputs.lines_changed) }}
+    secrets:
+      GIST_PAT: ${{ secrets.GIST_PAT }}
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+      DISCORD_APPRENTICE_ROLE_ID: ${{ secrets.DISCORD_APPRENTICE_ROLE_ID }}
