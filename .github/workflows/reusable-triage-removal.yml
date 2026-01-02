@@ -52,7 +52,7 @@ jobs:
         if: steps.check_assigned.outputs.has_assignee == 'true'
         uses: actions/checkout@v4
         with:
-          repository: aossie/contributor-automation
+          repository: automation-workflows/contributor-automation
           path: automation
           
       - name: Setup Python
