@@ -7,6 +7,7 @@ import sys
 import os
 import requests
 import json
+import time
 from typing import Dict, Any
 
 sys.path.append(os.path.dirname(__file__))
@@ -60,7 +61,6 @@ class DiscordManager:
                 # Rate limited
                 retry_after = response.json().get('retry_after', 5)
                 print(f"Rate limited. Retry after {retry_after}s")
-                import time
                 time.sleep(retry_after)
                 return self.assign_role(guild_id, user_id, role_id)
             else:
@@ -239,7 +239,6 @@ def main():
         
         # Add other actions as needed...
         
-        print("✓ Discord operation completed successfully")
     
     except Exception as e:
         print(f"Error: {e}")
