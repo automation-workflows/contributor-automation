@@ -28,3 +28,5 @@ Secrets can be set at organization-level (shared) or repository-level (per-proje
 
 **Setup options:**
 - **Maintainers:** Set in your repository settings (recommended)
+
+- ghp_A1bC2dE3fH4iJ5kL6mN7oP8qR9sT0u
